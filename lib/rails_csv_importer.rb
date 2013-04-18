@@ -5,7 +5,6 @@ if RUBY_VERSION >= "1.9"
 else
   require 'faster_csv'
 end
-require 'iconv'
 
 module Acts # :nodoc
   module RailsCsvImporter
@@ -85,8 +84,6 @@ module Acts # :nodoc
       # See +README.rdoc+ for details.
       #
       def import_from_csv(import_config, content, options = {})
-        ic = Iconv.new('UTF-8', 'UTF-8')
-
         num_rows_saved=0
         errors = []
         header_row = []
@@ -112,7 +109,14 @@ module Acts # :nodoc
             FasterCSV.parse(content, :skip_blanks => true) do |row|
               row_num += 1
               col_num = 0
-              row = row.map { |col| col_num += 1; ic.iconv(col) }
+
+              row.each do |col|
+                col_num += 1
+                unless col.to_s.force_encoding("UTF-8").valid_encoding?
+                  raise Encoding::InvalidByteSequenceError.new(col)
+                end
+              end
+
               if first_row == true
                 header_row = row
                 row.each { |column_name| col_names << name_to_column_hash[column_name.downcase] }
@@ -123,7 +127,7 @@ module Acts # :nodoc
                 row.each_with_index { |column, x| row_hash[col_names[x]] = column if col_names[x] }
               end
             end
-          rescue Iconv::IllegalSequence => ex
+          rescue Encoding::InvalidByteSequenceError => ex
             all_rows = header_row = []
             errors << ["Invalid character encountered in row #{row_num}, column #{col_num} in the CSV file: #{ex.message}", []]
           rescue FasterCSV::MalformedCSVError => ex
