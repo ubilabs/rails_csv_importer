@@ -65,6 +65,9 @@ Call Foo.import_from_csv(import_config, content, options = {})
   [:partial_save] If true, any valid rows in the csv will be saved even if there are some invalid rows.
                   Otherwise, data will be imported only when all rows are valid.
 
+  [:keep_present_values] If true, only column values whose corresponding model attribute values are blank will be saved.
+                         Otherwise, column values are ignored.
+
 Exception +Acts::RailsCsvImporter::RailsCsvImportError+ is thrown when there are errors duing the importing.
 
 == Example
