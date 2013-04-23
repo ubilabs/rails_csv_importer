@@ -147,23 +147,21 @@ module Acts # :nodoc
             begin
               row.each_with_index do |column, x|
                 col_name = col_names[x]
-                if col_name
-                  col_config = mapping[col_name]
-                  unless column.blank?
-                    begin
-                      # assign the correct value to the attribute according to the config
-                      record[col_name] = if col_config[:value_method]
-                        col_config[:value_method].call(column, row_hash, mapping)
-                      elsif col_config[:record_method]
-                        r = col_config[:record_method].call(column, row_hash, mapping)
-                        raise "Unable to find referred record of value #{column}" if r.nil?
-                        r.id
-                      else
-                        column
-                      end
-                    rescue Exception => e
-                      raise "Failed to import column '#{header_row[x]}': #{e.message}"
+                if col_name && column.present? && (record[col_name].blank? || !options[:keep_present_values])
+                  begin
+                    # assign the correct value to the attribute according to the config
+                    col_config = mapping[col_name]
+                    record[col_name] = if col_config[:value_method]
+                      col_config[:value_method].call(column, row_hash, mapping)
+                    elsif col_config[:record_method]
+                      r = col_config[:record_method].call(column, row_hash, mapping)
+                      raise "Unable to find referred record of value #{column}" if r.nil?
+                      r.id
+                    else
+                      column
                     end
+                  rescue Exception => e
+                    raise "Failed to import column '#{header_row[x]}': #{e.message}"
                   end
                 end
               end
