@@ -155,8 +155,8 @@ module Acts # :nodoc
                   begin
                     # assign the correct value to the attribute according to the config
                     col_config = mapping[col_name]
-                    record[col_name] = if col_config[:value_method]
-                      col_config[:value_method].call(column, row_hash, mapping)
+                    value = if col_config[:value_method]
+                      col_config[:value_method].call(column, row_hash, mapping, record)
                     elsif col_config[:record_method]
                       r = col_config[:record_method].call(column, row_hash, mapping)
                       raise "Unable to find referred record of value #{column}" if r.nil?
@@ -164,6 +164,7 @@ module Acts # :nodoc
                     else
                       column
                     end
+                    record.send("#{col_name}=", value)
                   rescue Exception => e
                     raise "Failed to import column '#{header_row[x]}': #{e.message}"
                   end
@@ -228,4 +229,3 @@ module Acts # :nodoc
 end
 
 ActiveRecord::Base.send(:include, Acts::RailsCsvImporter) if defined?(ActiveRecord)
-
