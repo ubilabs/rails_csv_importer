@@ -151,6 +151,7 @@ module Acts # :nodoc
             begin
               row.each_with_index do |column, x|
                 col_name = col_names[x]
+                next unless accessible_attributes.include?(col_name)
                 if col_name && column.present? && (record[col_name].blank? || !options[:keep_present_values])
                   begin
                     # assign the correct value to the attribute according to the config
