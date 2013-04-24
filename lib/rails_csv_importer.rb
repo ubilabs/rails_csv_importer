@@ -88,6 +88,8 @@ module Acts # :nodoc
         errors = []
         header_row = []
 
+        faster_csv_options = (options.delete(:faster_csv) || {}).merge(skip_blanks: true)
+
         mapping = import_config[:mapping]
         # a hash for finding the key for a column heading quickly
         name_to_column_hash = mapping.keys.inject({}) { |acc, key|
@@ -106,7 +108,7 @@ module Acts # :nodoc
 
           first_row = true
           begin
-            FasterCSV.parse(content, :skip_blanks => true) do |row|
+            FasterCSV.parse(content, faster_csv_options) do |row|
               row_num += 1
               col_num = 0
 
