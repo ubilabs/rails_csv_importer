@@ -104,6 +104,8 @@ module Acts # :nodoc
           row_num = 0
           col_num = 0
 
+          self.delete_all if options[:nuke_before_import]
+
           # first phase: parse the csv and store the result in all_rows
 
           first_row = true

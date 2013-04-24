@@ -70,6 +70,8 @@ Call Foo.import_from_csv(import_config, content, options = {})
 
   [:faster_csv] A hash of options that FasterCSV will understand.
 
+  [:nuke_before_import] If true, deletes all existing datasets for the model.
+
 Exception +Acts::RailsCsvImporter::RailsCsvImportError+ is thrown when there are errors duing the importing.
 
 == Example
