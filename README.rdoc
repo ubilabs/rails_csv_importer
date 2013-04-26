@@ -72,7 +72,7 @@ Call Foo.import_from_csv(import_config, content, options = {})
   [:keep_present_values] If true, only column values whose corresponding model attribute values are blank will be saved.
                          Otherwise, column values are ignored.
 
-  [:faster_csv] A hash of options that FasterCSV will understand.
+  [:csv_options] A hash of options that are passed to `CSV.parse`.
 
   [:nuke_before_import] If true, deletes all existing datasets for the model.
 

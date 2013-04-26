@@ -90,7 +90,7 @@ module Acts # :nodoc
 
         content.encode!(options[:transcode][:dst_encoding], options[:transcode][:src_encoding]) if options[:transcode]
 
-        faster_csv_options = (options.delete(:faster_csv) || {}).merge(skip_blanks: true)
+        csv_options = (options.delete(:csv_options) || {}).merge(skip_blanks: true)
 
         mapping = import_config[:mapping]
         # a hash for finding the key for a column heading quickly
@@ -112,7 +112,7 @@ module Acts # :nodoc
 
           first_row = true
           begin
-            FasterCSV.parse(content, faster_csv_options) do |row|
+            FasterCSV.parse(content, csv_options) do |row|
               row_num += 1
               col_num = 0
 
