@@ -62,6 +62,10 @@ Call Foo.import_from_csv(import_config, content, options = {})
 
   A hash of options for the import. (_Optional_)
 
+  [:transcode] Must contain a hash with the keys `:src_encoding` (i.e., source encoding) and `:dst_encoding`,
+               (i.e., destination encoding). The content is transcoded from the encoding specified in the
+               `:src_encoding` value to the encoding specified in the `:dst_encoding` value.
+
   [:partial_save] If true, any valid rows in the csv will be saved even if there are some invalid rows.
                   Otherwise, data will be imported only when all rows are valid.
 
