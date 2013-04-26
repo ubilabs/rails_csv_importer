@@ -88,6 +88,8 @@ module Acts # :nodoc
         errors = []
         header_row = []
 
+        content.encode!(options[:transcode][:dst_encoding], options[:transcode][:src_encoding]) if options[:transcode]
+
         faster_csv_options = (options.delete(:faster_csv) || {}).merge(skip_blanks: true)
 
         mapping = import_config[:mapping]
